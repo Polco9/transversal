@@ -14,7 +14,7 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background-image: url('photos/login.jpg');
+            background-image: url("../photos/login.jpg");
             background-size: cover;
         }
 
@@ -65,11 +65,11 @@
             margin-top: 10px;
         }
 
-        #signup{
+        #sign_up{
             background-color: #007bff;
         }
 
-        #signup:hover {
+        #sign_up:hover {
             background-color: #0056b3;
         }
     </style>
@@ -79,15 +79,16 @@
         <div id="form">
             <div id="logo">
                 <h1>Sign Up</h1>
-                <img id="logo2" src="photos/logo_empresa.png">
+                <img id="logo2" src="../photos/logo_empresa.png">
             </div>
-            <form id="form1" action="post" method="post">
+            <form id="form1" action="user_register.php" method="post">
                 <input type="text" name="user" id="user" placeholder="Username">
                 <input type="text" name="gmail" id="gmail" placeholder="example@gmail.com">
                 <input type="password" name="password" id="password" placeholder="Password">
+                <input type="password" name="conf_pass" id="conf_pass" placeholder="Confirm password">
 
                 <nav>
-                        <button type="submit" id="signup">Sign up</button>
+                        <button type="submit" id="sign_up">Sign up</button>
                         <p>Already have an acount? <a href="Sign_in.php"><span>Sign In</span></a></p>
                 </nav>
             </form>
