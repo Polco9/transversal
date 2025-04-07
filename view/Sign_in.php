@@ -14,7 +14,7 @@
                 justify-content: center;
                 align-items: center;
                 height: 100vh;
-                background-image: url("../photos/login.jpg");
+                background-image: url("../photos/fondo_login.jpg");
                 background-size: cover;
             }
 
