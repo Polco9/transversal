@@ -81,14 +81,32 @@
                 <h1>Sign Up</h1>
                 <img id="logo2" src="../photos/logo_empresa.png">
             </div>
-            <form id="form1" action="user_register.php" method="post">
-                <input type="text" name="user" id="user" placeholder="Username">
-                <input type="text" name="gmail" id="gmail" placeholder="example@gmail.com">
-                <input type="password" name="password" id="password" placeholder="Password">
-                <input type="password" name="conf_pass" id="conf_pass" placeholder="Confirm password">
+            <form id="form1" action="../controller/user_controller.php" method="post">
+                <input type="text" name="user" id="user" placeholder="Username" required>
+                <input type="text" name="gmail" id="gmail" placeholder="example@gmail.com" required>
+                <input type="password" name="pass" id="pass" placeholder="Password" required>
+                <input type="password" name="conf_pass" id="conf_pass" placeholder="Confirm password" required>
+                <?php
+                    // if (empty($gmail)) 
+                    // {
+                    //     $errors[] = "Gmail is reuired";
+                    // } elseif (!filter_var($gmail, FILTER_VALIDATE_EMAIL)) 
+                    // {
+                    //     $errors[] = "Invalid gmail format";
+                    // }
+            
+                    // //valdar si la contraseña coincide con el confirmar contraseña
+                    // if (empty($conf_pass)) 
+                    // {
+                    //     $errors[] = "Confirm password is required";
+                    // } elseif ($pass != $conf_pass) 
+                    // {
+                    //     $errors[] = "Passwords don´t match";
+                    // }
+                ?>
 
                 <nav>
-                        <button type="submit" id="sign_up">Sign up</button>
+                        <button type="submit" id="sign_up" name="sign_up">Sign up</button>
                         <p>Already have an acount? <a href="Sign_in.php"><span>Sign In</span></a></p>
                 </nav>
             </form>

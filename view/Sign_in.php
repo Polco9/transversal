@@ -82,13 +82,13 @@
                     <h1>Sign In</h1>   
                     <img id="logo2" src="../photos/logo_empresa.png">
                 </div>
-                <form id="form1" action="user_controller.php" method="post">
-                    <input type="text" name="user" id="user" placeholder="Username">
-                    <input type="text" name="gmail" id="gmail" placeholder="example@gmail.com">
-                    <input type="password" name="password" id="password" placeholder="Password">
+                <form id="form1" action="../controller/user_controller.php" method="post">
+                    <input type="text" name="user" id="user" placeholder="Username" required>
+                    <input type="text" name="gmail" id="gmail" placeholder="example@gmail.com" required>
+                    <input type="password" name="pass" id="pass" placeholder="Password" required>
 
                     <nav>
-                            <button type="submit" id="sign_in">Sign in</button> 
+                            <button type="submit" id="sign_in" name="sign_in">Sign in</button> 
                             <p>Don´t have an acount? <a href="Sign_up.php"><span>Sign Up</span></a></p>
                             
 
@@ -98,3 +98,10 @@
         </article>
     </body>
 </html>
+<?php
+session_start();
+if (isset($_SESSION["login_error"])) {
+    echo "<p style='color: red;'>" . $_SESSION["login_error"] . "</p>";
+    unset($_SESSION["login_error"]);
+}
+?>

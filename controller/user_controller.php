@@ -2,27 +2,38 @@
 
 session_start();
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+if ($_SERVER["REQUEST_METHOD"] == "POST") 
+{
+    $userController = new user_controller();
 
-    $user = new user_controller();
-    $user->get_users();
+    if (isset($_POST["sign_in"])) 
+    {
+       $userController->sign_in();
 
-    if (isset($_POST["sign_in"])) {
-        echo "<p>Sign in button is clicked.</p>";
-        $user->sign_in();
+    }elseif (isset($_POST["sign_up"])) 
+    {
+        $userController->sign_up();
+
+    }elseif (isset($_POST["sign_out"])) 
+    {
+        $userController->sign_out();
+
+    }else
+    {
+        echo "<h1>Error 404</h1>";
     }
-    if (isset($_POST["sign_out"])) {
-        echo "<p>Sign out button is clicked.</p>";
-        $user->sign_out();
-    }
-    if (isset($_POST["sign_up"])) {
-        echo "<p>Sign up button is clicked.</p>";
-        if($user->sign_up()){
-          //Ir al home
-        }else{
-            //mostrar errores
-        }
-    }
+
+
+
+
+    // if (isset($_POST["sign_up"])) 
+    // {
+    //     $userController->sign_up();
+    // }
+    // if (isset($_POST["sign_out"])) 
+    // {
+    //     $userController->sign_out();
+    // }
    
 }
 
@@ -30,75 +41,78 @@ class user_controller
 {
 
     private $conn;
-
-    public function __construct()
+    
+    public function __construct() 
     {
-        $conn = new ddbb_controller();
-    }
-    public function get_users(): array
-    {
-        $usersList = array();
-        $sql = "SELECT * from  users where user =? and password=?";
 
-        $result = $this->conn->query($sql);
+        $servername = "localhost";
+        $username = "root";
+        $password = "";
+        $dbname = "easytiket";
 
-        if ($result->num_rows > 0) {
-            // output data of each row
-            while ($row = $result->fetch_assoc()) {
-                $usersList[$row["id"]] = new User($row["id"], $row["name"], $row["gmail"]);
-            }
+        $this->conn = new mysqli("localhost", "root", "", "easytiket");
+        
+        if ($this->conn->connect_error) 
+        {
+            die("connection failed" . $this->conn->connect_error);
         }
-        $this->conn->close();
-        return $usersList;
     }
+
     public function sign_in()
     {
-        if ($_SERVER["REQUEST_METHOD"] == "POST") {
-            $user = trim($_POST["user"]);
-            $gmail = trim($_POST["gmail"]);
-            $password = trim($_POST["password"]);
+        $user = trim($_POST["user"]);
+        $gmail = trim($_POST["gmail"]);
+        $pass = trim($_POST["pass"]);
+    
+        $query = "SELECT user, gmail, pass FROM usuarios WHERE user=? and gmail=? and pass=?";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bind_param("sss", $user, $gmail, $pass);
+        $stmt->execute();
+        $result = $stmt->get_result();
 
-            $sql = "SELECT * from  users where user = $user and gmail = $gmail and passwor = $password";
-            $result = $this->conn->query($sql);
-            if ($result->num_rows > 0) {
-                return true;
-            }
+        if ($row = $result->fetch_assoc()) 
+        {
+            $_SESSION["logged"] = true;
+            $_SESSION["user"] = $row["user"];
+            $_SESSION["gmail"] = $row["gmail"];
+            $_SESSION["pass"] = $row["pass"];
+
+            $this->conn->close();
+
+            header(header: "Location: ../view/web.php");
+            return true;
+        }else
+        {
+            $_SESSION["logged"] = false;
+            $_SESSION["sign_in_error"] = "User, Gmail or Password are wrong";
+            $this->conn->close();
+            header("Location: ../view/sign_in.php");
+            return false;
         }
-        $this->conn->close();
-        return false;
 
     }
-
-    public function sign_out(): void {}
-
+    
     public function sign_up()
     {
-        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    
             $user = trim($_POST["user"]);
             $gmail = trim($_POST["gmail"]);
-            $password = trim($_POST["password"]);
+            $pass = trim($_POST["pass"]);
             $conf_pass = trim($_POST["conf_pass"]);
 
-            $sql = "INSERT into usuarios values(users, gmail, passwor)";
-            $result = $this->conn->query($sql);
-            if ($result->num_rows > 0) {
-                return true;
-            }
-            $this->conn->close();
-        }
+            $query = "INSERT INTO `usuarios`(`user`, `gmail`, `pass`) VALUES ('$user','$gmail','$pass')";
+            $stmt = $this->conn->prepare($query);
+            $stmt->bind_param("sss", $user, $gmail, $pass);
+            $stmt->execute();
+            $result = $stmt->get_result();
 
-        if (empty($gmail)) {
-            $errors[] = "Gmail is reuired";
-        } elseif (!filter_var($gmail, FILTER_VALIDATE_EMAIL)) {
-            $errors[] = "Invalid gmail format";
-        }
 
-        //valdar si la contraseña coincide con el confirmar contraseña
-        if (empty($conf_pass)) {
-            $errors[] = "Confirm password is required";
-        } elseif ($password != $conf_pass) {
-            $errors[] = "Passwords don´t match";
-        }
-        return false;
+        
+        
     }
+
+    public function sign_out(): void 
+    {}
+
 }
+?>
