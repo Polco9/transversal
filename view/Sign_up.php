@@ -113,7 +113,6 @@
                 <input type="password" name="pass" id="pass" placeholder="Password" required>
                 <input type="password" name="conf_pass" id="conf_pass" placeholder="Confirm password" required>
                 <?php
-                    //TODO si hay valor en variable session.passerror -> echo
                     if(isset($_SESSION["pass_error"]))
                     {
                         echo "<p style='color:red'>" . $_SESSION["pass_error"] . "</p>";
